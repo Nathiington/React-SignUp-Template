@@ -1,14 +1,15 @@
 import React, { useRef, useState } from 'react'
-import { Button, TextField, Card, Grid, Typography } from '@material-ui/core';
+import { Button, TextField, Card, Grid, Typography, Divider } from '@material-ui/core';
 import { makeStyles, createMuiTheme, MuiThemeProvider } from '@material-ui/core/styles';
 import { useAuth } from '../Context/AuthContext'
 import { Alert } from '@material-ui/lab';
 import {Link,useHistory} from 'react-router-dom'
+import { IoLogoGoogle, IoLogoMicrosoft } from 'react-icons/io5'
 
 const colortheme = createMuiTheme({
     palette: {
         primary: {
-            main: '#000',
+            main: '#0000FF',
         },
         secondary: {
             main: '#000000'
@@ -41,7 +42,7 @@ export default function Login() {
     const classes = useStyles()
     const emailRef = useRef()
     const passwordRef = useRef()
-    const { login } = useAuth()
+    const { login, googleSignin, microsoftSignin } = useAuth()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
     const history = useHistory()
@@ -118,6 +119,35 @@ export default function Login() {
                                 disabled={loading}
                             >
                                 Log In
+                        </Button>
+                        <Divider/>
+                        <div style={{textAlign:'center'}}> OR </div> 
+                        <Divider/>
+                        <Button 
+                            variant="contained"
+                            fullWidth
+                            color="primary"
+                            className={classes.submit}
+                            startIcon={<IoLogoGoogle/>}
+                            onClick={()=>{
+                                console.log("google")
+                                googleSignin()
+                            }}
+                            
+                        >
+                            Google
+                        </Button>
+                        <Button 
+                            variant="contained"
+                            fullWidth
+                            color="primary"
+                            startIcon={<IoLogoMicrosoft />}
+                            onClick={()=>{
+                                console.log("microsfot")
+                                microsoftSignin()
+                            }}
+                        >
+                            Microsoft
                         </Button>
                             <Grid container direction='column' justify='space-between' alignItems='flex-start' spacing={1}>
                                 <Grid item xs={12} sm={12} md={6} lg={6}>
