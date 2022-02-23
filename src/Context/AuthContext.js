@@ -1,14 +1,19 @@
 import React,{useContext, useState, useEffect} from 'react'
 import {auth} from '../firebase'
+import { GoogleAuthProvider, OAuthProvider } from 'firebase/auth'
+import { useHistory } from 'react-router-dom'
+
+
 
 const AuthContext = React.createContext();
+
 
 export function useAuth(){
     return useContext(AuthContext)
 }
 
 export function AuthProvider({children}) {
-
+const history = useHistory()
 const [currentUser, setCurrentUser] = useState()
 const [loading, setLoading] = useState()
 
@@ -45,6 +50,43 @@ useEffect(()=> {
     return unsubscribe
 }, [])
 
+function googleSignin() {
+    const provider = new GoogleAuthProvider()   
+    return auth.signInWithPopup(provider).then(function(result) {
+      var token = result.credential.accessToken;
+      var user = result.user;
+      history.push("/")
+      console.log(token)
+      console.log(user)
+   }).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+		
+      console.log(errorCode)
+      console.log(errorMessage)
+   });
+} 
+
+function microsoftSignin() {
+    const provider = new OAuthProvider('microsoft.com');
+    return auth.signInWithPopup(provider).then(function(result) {
+      const credential = OAuthProvider.credentialFromResult(result);
+        const accessToken = credential.accessToken;
+        const idToken = credential.idToken;
+      history.push("/")
+      console.log(accessToken)
+      console.log(idToken)
+   }).catch(function(error) {
+      var errorCode = error.code;
+      var errorMessage = error.message;
+		
+      console.log(errorCode)
+      console.log(errorMessage)
+   });
+} 
+
+
+
 
 const value = {
     currentUser,
@@ -53,7 +95,9 @@ const value = {
     logout,
     resetPwd,
     updateEmail,
-    updatePassword
+    updatePassword,
+    googleSignin,
+    microsoftSignin
 }
 
     return (
